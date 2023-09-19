@@ -28,7 +28,7 @@ impl Ray {
 }
 
 impl Display for Ray {
-	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, _f: &mut Formatter<'_>) -> std::fmt::Result {
 		println!("------  Ray  -------");
 		println!("Ray Origin: {}", self.origin);
 		println!("Ray Position: {}", self.origin);

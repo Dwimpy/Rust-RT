@@ -28,6 +28,10 @@ impl Canvas {
 
 		let mut canvas = window.into_canvas().build().unwrap();
 		let mut event_pump = sdl_context.event_pump().unwrap();
+		let size = canvas.output_size().unwrap();
+		let width = size.0;
+		let height = size.1;
+		canvas.clear();
 		Canvas {
 			canvas,
 			event_pump,
@@ -60,10 +64,12 @@ impl Canvas {
 					_ => {}
 				}
 			}
-			::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
 		}
 	}
 
+	pub fn size(&self) -> (u32, u32) {
+		self.canvas.output_size().unwrap()
+	}
 	pub fn width(&self) -> u32 {
 		self.width
 	}
