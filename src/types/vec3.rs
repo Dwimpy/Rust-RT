@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter};
-use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Sub, SubAssign};
+use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Range, Sub, SubAssign};
+use rand::Rng;
 
 #[derive(Copy, Clone)]
 
@@ -40,9 +41,7 @@ impl Vec3 {
     }
 
     pub fn normalized(self) -> Vec3 {
-        Vec3 {
-            e: [self.e[0] / self.length(), self.e[1] / self.length(), self.e[2] / self.length()]
-        }
+        self / self.length()
     }
     pub fn length(self) -> f64 {
         self.dot(self).sqrt()
@@ -54,6 +53,21 @@ impl Vec3 {
             (255.999 * self.e[1]) as u64,
             (255.999 * self.e[2]) as u64
         )
+    }
+    pub fn random(r: Range<f64>) -> Vec3 {
+        let mut rng = rand::thread_rng();
+
+        Vec3 {
+            e: [rng.gen_range(r.clone()), rng.gen_range(r.clone()), rng.gen_range(r.clone())]
+        }
+    }
+    pub fn random_unit_sphere() -> Vec3 {
+        loop {
+            let v = Vec3::random(-1.0..1.0);
+            if v.length() < 1.0{
+                 return v
+            }
+        }
     }
 }
 
@@ -93,38 +107,9 @@ impl SubAssign for Vec3 {
     }
 }
 
-impl Mul<Vec3> for Vec3 {
-    type Output = Vec3;
-
-    fn mul(self, rhs: Self) -> Self::Output {
-        Vec3 {
-            e: [self.e[0] * rhs.e[0], self.e[1] * rhs.e[1], self.e[2] * rhs.e[2]]
-        }
-    }
-}
-
-impl Mul<Vec3> for f64 {
-	type Output = Vec3;
-
-	fn mul(self, rhs: Self::Output) -> Self::Output {
-		Vec3 {
-			e: [self * rhs.e[0], self * rhs.e[1], self * rhs.e[1]]
-		}
-	}
-}
-
-impl MulAssign<Vec3> for Vec3 {
-    fn mul_assign(&mut self, rhs: Vec3) {
-        *self = Vec3 {
-            e: [self.e[0] * rhs.e[0], self.e[1] * rhs.e[1], self.e[2] * rhs.e[2]]
-        }
-    }
-}
-
 impl Mul<f64> for Vec3 {
     type Output = Vec3;
-
-    fn mul(self, rhs: f64) -> Self::Output {
+    fn mul(self, rhs: f64) -> Vec3 {
         Vec3 {
             e: [self.e[0] * rhs, self.e[1] * rhs, self.e[2] * rhs],
         }
@@ -132,14 +117,22 @@ impl Mul<f64> for Vec3 {
 }
 
 impl MulAssign<f64> for Vec3 {
-    fn mul_assign(&mut self, rhs: f64) {
+    fn mul_assign(&mut self, rhs: f64) -> () {
         *self = Vec3 {
             e: [self.e[0] * rhs, self.e[1] * rhs, self.e[2] * rhs]
         }
     }
 }
 
+impl Mul<Vec3> for f64 {
+    type Output = Vec3;
 
+    fn mul(self, rhs: Vec3) -> Self::Output {
+        Vec3 {
+            e: [self * rhs.e[0], self * rhs.e[1], self * rhs.e[2]]
+        }
+    }
+}
 
 impl Div<f64> for Vec3 {
     type Output = Vec3;
