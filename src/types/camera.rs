@@ -29,7 +29,6 @@ impl Camera {
 		}
 
 		let right = forward.cross(up);
-		println!("{}\n{}\n{}", forward, up, right);
 		let h = viewport_width * up;
 		let v = viewport_height * right;
 		let lower_left_corner = from - h / 2.0 - v / 2.0 - forward;

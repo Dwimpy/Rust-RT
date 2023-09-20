@@ -53,6 +53,7 @@ impl Canvas {
 			let b = (color.z().powf(1.0 / 1.8).clamp(0.0, 0.999) * 255.999) as u8;
 			let g = (color.y().powf(1.0 / 1.8).clamp(0.0, 0.999) * 255.999) as u8;
 			self.canvas.set_draw_color(sdl2::pixels::Color::RGB(r, g, b));
+
 		}
 		self.canvas.draw_rect(Rect::new(x, y, 1, 1)).unwrap()
 	}

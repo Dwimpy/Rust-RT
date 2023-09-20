@@ -1,3 +1,5 @@
+use std::rc::Rc;
+use crate::materials::Scatter;
 use crate::types::hit::{Hit, HitRecord};
 use crate::types::ray::Ray;
 use crate::types::vec3::{Point3, Vec3};
@@ -5,13 +7,15 @@ use crate::types::vec3::{Point3, Vec3};
 pub struct Sphere {
 	origin: Point3,
 	radius: f64,
+	mat: Rc<dyn Scatter>
 }
 
 impl Sphere {
-	pub fn new(origin: Point3, radius: f64) -> Self {
+	pub fn new(origin: Point3, radius: f64, mat: Rc<dyn Scatter>) -> Self {
 		Self {
 			origin,
 			radius,
+			mat,
 		}
 	}
 }
@@ -40,6 +44,7 @@ impl Hit for Sphere {
 			t: root,
 			isec_point: ray.at(root),
 			normal: Vec3::new(0.0, 0.0, 0.0),
+			mat: self.mat.clone(),
 			front_face: false
 		};
 		let out_normal = ((hit_rec.isec_point - self.origin) / self.radius);

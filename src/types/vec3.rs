@@ -69,6 +69,20 @@ impl Vec3 {
             }
         }
     }
+
+	pub fn reflect(self, n: Vec3) -> Vec3 {
+		self - 2.0 * self.dot(n) * n
+	}
+
+	pub fn refract(self, n: Vec3, etai_over_etat: f64) -> Vec3 {
+		let cos = ((-1.0) * self).dot(n).min(1.0);
+		let r_perp = etai_over_etat * (self + cos * n);
+		let r_parallel = -(1.0 - r_perp.length().powi(2)).abs().sqrt() * n;
+		r_perp + r_parallel
+	}
+	pub fn near_zero(self) -> bool {
+		self.e[0].abs() < 1e-8 && self.e[1].abs() < 1e-8 && self.e[2].abs() < 1e-8
+	}
 }
 
 impl Add for Vec3 {
@@ -130,6 +144,24 @@ impl Mul<Vec3> for f64 {
     fn mul(self, rhs: Vec3) -> Self::Output {
         Vec3 {
             e: [self * rhs.e[0], self * rhs.e[1], self * rhs.e[2]]
+        }
+    }
+}
+
+impl Mul<Vec3> for Vec3 {
+	type Output =  Vec3;
+
+	fn mul(self, rhs: Vec3) -> Vec3 {
+		Vec3 {
+		e: [self.e[0] * rhs.e[0], self.e[1] * rhs.e[1], self.e[2] * rhs.e[2]]
+		}
+	}
+}
+
+impl MulAssign<Vec3> for Vec3 {
+    fn mul_assign(&mut self, rhs: Vec3) -> () {
+        *self = Vec3 {
+            e: [self.e[0] * rhs.e[0], self.e[1] * rhs.e[1], self.e[2] * rhs.e[2]]
         }
     }
 }
