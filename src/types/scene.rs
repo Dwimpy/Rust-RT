@@ -1,4 +1,5 @@
 use std::rc::Rc;
+use std::sync::Arc;
 use crate::materials::dielectric::Dielectric;
 use crate::materials::lambertian::Lambertian;
 use crate::materials::metal::Metal;
@@ -10,15 +11,18 @@ use crate::types::vec3::{Color, Point3, Vec3};
 pub struct Scene {
 	world: World,
 	camera: Option<Camera>,
+	spp: u64
 }
 
 impl Scene {
-	pub fn new () -> Scene {
+	pub fn new (spp: u64) -> Scene {
 		let world = World::new();
 		let camera = None;
+		let spp = spp;
 		Self {
 			world,
 			camera,
+			spp,
 		}
 	}
 
@@ -31,11 +35,11 @@ impl Scene {
 			aspect_ratio,
 		));
 
-		let ground_mat = Rc::new(Lambertian::new(Color::new(0.8,0.8,0.0)));
-		let center_mat = Rc::new(Lambertian::new(Color::new(0.7,0.3,0.3)));
-		let left_mat = Rc::new(Metal::new(Color::new(0.8,0.8,0.8), 0.1));
-		let right_mat_inner = Rc::new(Dielectric::new(1.52));
-		let right_mat = Rc::new(Dielectric::new(1.52));
+		let ground_mat = Arc::new(Lambertian::new(Color::new(0.8,0.8,0.0)));
+		let center_mat = Arc::new(Lambertian::new(Color::new(0.7,0.3,0.3)));
+		let left_mat = Arc::new(Metal::new(Color::new(0.8,0.8,0.8), 0.1));
+		let right_mat_inner = Arc::new(Dielectric::new(1.52));
+		let right_mat = Arc::new(Dielectric::new(1.52));
 
 		let ground = Sphere::new(Point3::new(0.0, -100.5, 0.0), 100.0, ground_mat);
 		let center = Sphere::new(Point3::new(0.0, 0.0,0.0), 0.5, center_mat);
@@ -57,6 +61,9 @@ impl Scene {
 		&self.camera
 	}
 
+	pub fn spp(&self) -> &u64 {
+		&self.spp
+	}
 	pub fn clear(&mut self) {
 		self.world.clear();
 		self.camera = None

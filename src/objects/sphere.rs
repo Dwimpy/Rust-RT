@@ -1,4 +1,5 @@
 use std::rc::Rc;
+use std::sync::Arc;
 use crate::materials::Scatter;
 use crate::types::hit::{Hit, HitRecord};
 use crate::types::ray::Ray;
@@ -7,11 +8,11 @@ use crate::types::vec3::{Point3, Vec3};
 pub struct Sphere {
 	origin: Point3,
 	radius: f64,
-	mat: Rc<dyn Scatter>
+	mat: Arc<dyn Scatter>
 }
 
 impl Sphere {
-	pub fn new(origin: Point3, radius: f64, mat: Rc<dyn Scatter>) -> Self {
+	pub fn new(origin: Point3, radius: f64, mat: Arc<dyn Scatter>) -> Self {
 		Self {
 			origin,
 			radius,

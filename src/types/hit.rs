@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::sync::Arc;
 use crate::materials::Scatter;
 use crate::types::ray::Ray;
 use crate::types::vec3::{Point3, Vec3};
@@ -9,7 +9,7 @@ pub struct HitRecord {
 	pub isec_point: Point3,
 	pub normal: Vec3,
 	pub t: f64,
-	pub mat: Rc<dyn Scatter>,
+	pub mat: Arc<dyn Scatter>,
 	pub front_face: bool,
 }
 
@@ -24,7 +24,7 @@ impl HitRecord {
 	}
 }
 
-pub trait Hit {
+pub trait Hit: Send + Sync {
 	fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
 }
 

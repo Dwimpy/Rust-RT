@@ -8,5 +8,6 @@ edition = "2021"
 [dependencies]
 sdl2="0.35.2"
 rand="0.8.5"
+rayon="0.9.0"
 
 # this assumes that you are using the cortex-m-quickstart template
